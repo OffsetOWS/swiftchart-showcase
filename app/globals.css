@@ -73,7 +73,7 @@ h2 { font-size: clamp(2.7rem, 6.4vw, 5.2rem); }
 .hero { position: relative; overflow: hidden; color: #fff; background: linear-gradient(180deg, var(--sky-deep) 0%, var(--sky) 38%, #5cb3e3 100%); padding: 56px 0 250px; }
 .hero-inner { position: relative; z-index: 2; }
 .kicker { font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; font-size: 0.92rem; }
-.hero h1 { font-size: min(15.4vw, 13rem); line-height: 0.92; white-space: nowrap; margin-top: 22px; margin-left: -0.03em; }
+.hero h1 { font-size: min(12vw, 10.2rem); line-height: 0.92; white-space: nowrap; margin-top: 22px; margin-left: -0.03em; }
 .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) 560px; gap: 24px; align-items: end; }
 .hero-copy { padding-bottom: 60px; }
 .hero-copy::before { content: ''; display: block; width: 76px; height: 3px; background: #fff; margin-bottom: 22px; }
@@ -340,7 +340,7 @@ html:has(dialog[open]) { overflow: hidden; }
 
   .reveal-heading[data-motion='pending'] { opacity: 0; transform: translateY(16px); }
   .reveal-heading[data-motion='running'] { animation: fade-up 600ms var(--ease-out) both; }
-  .hero { --type-start: 320ms; }
+  .hero { --type-start: 320ms; --hero-ready: calc(var(--type-start) + var(--hero-type-duration)); }
   .closing { --type-start: 100ms; }
   :is(.hero, .closing)[data-motion='pending'] .typed-letter { opacity: 0; }
   :is(.hero, .closing)[data-motion='running'] .typed-letter { animation: type-letter 90ms linear calc(var(--type-start) + var(--letter-delay)) both; }
@@ -348,14 +348,14 @@ html:has(dialog[open]) { overflow: hidden; }
   :is(.hero, .closing)[data-motion='running'] .typed-letter:last-child::after { animation: letter-caret 90ms steps(1, end) calc(var(--type-start) + var(--letter-delay)) both, caret-blink 600ms step-end calc(var(--type-start) + var(--type-duration)) 3, caret-out 200ms ease calc(var(--type-start) + var(--type-duration) + 1800ms) forwards; }
   .hero[data-motion='pending'] :is(.kicker, .hero-copy, .phone-rise, .notification-enter, .stage-note) { opacity: 0; }
   .hero[data-motion='running'] .kicker { animation: fade-up 250ms var(--ease-out) both; }
-  .hero[data-motion='running'] .hero-copy { animation: fade-up 650ms var(--ease-out) 1400ms both; }
-  .hero[data-motion='running'] .phone-rise { animation: phone-rise 900ms var(--ease-out) 1650ms both; }
-  .hero[data-motion='running'] .phone-bob { animation: phone-bob 6s ease-in-out 2550ms infinite; }
-  .hero[data-motion='running'] .float-signal .notification-enter { animation: notification-in 650ms var(--ease-out) 2950ms both; }
-  .hero[data-motion='running'] .float-win .notification-enter { animation: notification-pop 500ms var(--ease-out) 4450ms both; }
-  .hero[data-motion='running'] .float-signal .float-surface { animation: card-bob 7.7s ease-in-out 3600ms infinite; }
-  .hero[data-motion='running'] .float-win .float-surface { animation: card-bob 9.1s ease-in-out 4950ms reverse infinite; }
-  .hero[data-motion='running'] .stage-note { animation: fade-up 500ms var(--ease-out) 2550ms both; }
+  .hero[data-motion='running'] .hero-copy { animation: fade-up 650ms var(--ease-out) var(--hero-ready) both; }
+  .hero[data-motion='running'] .phone-rise { animation: phone-rise 900ms var(--ease-out) calc(var(--hero-ready) + 250ms) both; }
+  .hero[data-motion='running'] .phone-bob { animation: phone-bob 6s ease-in-out calc(var(--hero-ready) + 1150ms) infinite; }
+  .hero[data-motion='running'] .float-signal .notification-enter { animation: notification-in 650ms var(--ease-out) calc(var(--hero-ready) + 1550ms) both; }
+  .hero[data-motion='running'] .float-win .notification-enter { animation: notification-pop 500ms var(--ease-out) calc(var(--hero-ready) + 3050ms) both; }
+  .hero[data-motion='running'] .float-signal .float-surface { animation: card-bob 7.7s ease-in-out calc(var(--hero-ready) + 2200ms) infinite; }
+  .hero[data-motion='running'] .float-win .float-surface { animation: card-bob 9.1s ease-in-out calc(var(--hero-ready) + 3550ms) reverse infinite; }
+  .hero[data-motion='running'] .stage-note { animation: fade-up 500ms var(--ease-out) calc(var(--hero-ready) + 1150ms) both; }
 
   .chart-sequence[data-motion='pending'] :is(.candle, .chart-marker, .entry-line, .flag-drop, .regime, .steps li) { opacity: 0; }
   .chart-sequence[data-motion='running'] .candle { transform-box: fill-box; transform-origin: center bottom; animation: candle-in 240ms var(--ease-out) both; }

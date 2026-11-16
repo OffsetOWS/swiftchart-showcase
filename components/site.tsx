@@ -10,6 +10,8 @@ import { CountPrice, HeroMotion, MotionSection, PlanMotion, RevealHeading, Typed
 import { FaqItem } from './faq-item';
 import { AgentExample, SignalBubble, SignalsExample, TakeProfitBubble } from './previews';
 
+const heroHeadline = 'Your next setup.';
+
 function ProductMedia({ product }: { product: Product }) {
   if (product.detail) return <ScreenshotPreview product={product} use={product.detail} crop />;
   if (product.screenshot) return <ScreenshotPreview product={product} />;
@@ -60,11 +62,11 @@ export function Site() {
       <a className="skip-link" href="#main">Skip to content</a>
       <Header />
       <main id="main">
-        <HeroMotion>
+        <HeroMotion headline={heroHeadline}>
           <SkyClouds />
           <div className="container hero-inner">
             <p className="kicker">Crypto and forex setups</p>
-            <TypedHeading text="Trade clear." />
+            <TypedHeading text={heroHeadline} />
             <div className="hero-grid">
               <div className="hero-copy">
                 <p className="hero-lede">Most of the market isn’t worth trading. SwiftChart reads the charts for you and messages you on Telegram only when a setup is confirmed.</p>

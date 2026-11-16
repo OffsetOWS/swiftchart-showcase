@@ -28,7 +28,7 @@ export function TypedHeading({ text, as: Heading = 'h1' }: { text: string; as?: 
   );
 }
 
-export function HeroMotion({ children }: { children: ReactNode }) {
+export function HeroMotion({ children, headline }: { children: ReactNode; headline: string }) {
   const { ref, motion } = useInView<HTMLElement>();
   const frame = useRef(0);
 
@@ -67,7 +67,7 @@ export function HeroMotion({ children }: { children: ReactNode }) {
     };
   }, [ref]);
 
-  return <section id="top" className="hero" ref={ref} data-motion={motion}>{children}</section>;
+  return <section id="top" className="hero" ref={ref} data-motion={motion} style={{ '--hero-type-duration': `${headline.length * 90}ms` } as CSSProperties}>{children}</section>;
 }
 
 export function CountPrice({ price, delay }: { price: string; delay: number }) {
