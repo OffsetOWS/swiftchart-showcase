@@ -8,29 +8,50 @@ const wisps: [number, number, number, number][] = [
   [120, 190, 190, 60], [520, 160, 170, 55], [900, 175, 200, 60], [1280, 185, 180, 58], [300, 110, 110, 34], [1150, 95, 100, 30],
 ];
 
-export function Clouds({ id, className = '' }: { id: string; className?: string }) {
+function CloudArt({ id, haze }: { id: string; haze: boolean }) {
+  const shapes = haze ? wisps : puffs;
   return (
-    <svg className={`clouds ${className}`} viewBox="0 0 1440 320" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <svg className="cloud-art" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
       <defs>
-        <filter id={`${id}-soft`} x="-10%" y="-30%" width="120%" height="160%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.011 0.02" numOctaves="4" seed="7" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="70" />
-          <feGaussianBlur stdDeviation="7" />
-        </filter>
-        <filter id={`${id}-haze`} x="-10%" y="-40%" width="120%" height="180%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.008 0.016" numOctaves="3" seed="19" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="90" />
-          <feGaussianBlur stdDeviation="16" />
+        <filter id={id} x="0" y="-40%" width="100%" height="180%">
+          <feTurbulence type="fractalNoise" baseFrequency={haze ? '0.008 0.016' : '0.011 0.02'} numOctaves={haze ? 3 : 4} seed={haze ? 19 : 7} stitchTiles="stitch" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale={haze ? 90 : 70} />
+          <feGaussianBlur stdDeviation={haze ? 16 : 7} />
         </filter>
       </defs>
-      <g filter={`url(#${id}-haze)`} fill="#f8fafc" opacity="0.55">
-        {wisps.map(([cx, cy, rx, ry], i) => <ellipse key={i} cx={cx} cy={cy} rx={rx} ry={ry} />)}
+      <g filter={`url(#${id})`} fill="#f8fafc" opacity={haze ? 0.55 : 1}>
+        {[-1440, 0, 1440].map(offset => (
+          <g key={offset} transform={`translate(${offset} 0)`}>
+            {shapes.map(([cx, cy, rx, ry], i) => <ellipse key={i} cx={cx} cy={cy} rx={rx} ry={ry} />)}
+          </g>
+        ))}
+        {!haze && <rect x="-40" y="262" width="1520" height="90" />}
       </g>
-      <g filter={`url(#${id}-soft)`} fill="#f8fafc">
-        {puffs.map(([cx, cy, rx, ry], i) => <ellipse key={i} cx={cx} cy={cy} rx={rx} ry={ry} />)}
-        <rect x="-40" y="262" width="1520" height="90" />
-      </g>
-      <rect x="0" y="300" width="1440" height="20" fill="#f8fafc" />
+      {!haze && <rect x="0" y="300" width="1440" height="20" fill="#f8fafc" />}
     </svg>
+  );
+}
+
+export function Clouds({ id, className = '' }: { id: string; className?: string }) {
+  return (
+    <div className={`clouds ${className}`} aria-hidden="true">
+      {['back', 'front'].map(layer => (
+        <div key={layer} className={`cloud-track cloud-track-${layer}`}>
+          {[0, 1].map(copy => <CloudArt key={copy} id={`${id}-${layer}-${copy}`} haze={layer === 'back'} />)}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function SkyClouds() {
+  return (
+    <div className="sky-clouds" aria-hidden="true">
+      {[0, 1, 2, 3].map(i => (
+        <svg key={i} className={`sky-cloud sky-cloud-${i}`} viewBox="0 0 220 85">
+          <path fill="#f8fafc" d="M25 72C-2 72 0 40 29 39C26 7 77 1 88 29C106 2 153 10 157 38C188 17 219 45 209 61C206 73 191 77 173 77H35Z" />
+        </svg>
+      ))}
+    </div>
   );
 }

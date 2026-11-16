@@ -17,6 +17,8 @@
   --display: 'Anton', 'Arial Narrow', Impact, sans-serif;
   --body: 'Space Grotesk Variable', 'Space Grotesk', system-ui, sans-serif;
   --mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, monospace;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   color-scheme: light;
 }
 
@@ -41,8 +43,8 @@ h2 { font-size: clamp(2.7rem, 6.4vw, 5.2rem); }
 .section-lede { color: var(--slate); font-size: 1.14rem; max-width: 56ch; margin-top: 18px; }
 
 /* Buttons: squared, like a court sign. White on sky, sky on white. */
-.button { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 20px; border-radius: 5px; font-weight: 600; font-size: 0.97rem; border: 2px solid transparent; transition: transform 140ms ease, background-color 140ms ease, color 140ms ease; white-space: nowrap; }
-.button:hover { transform: translateY(-2px); }
+.button { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 20px; border-radius: 5px; font-weight: 600; font-size: 0.97rem; border: 2px solid transparent; transition: transform 140ms var(--ease-out); white-space: nowrap; }
+
 .button-large { min-height: 56px; padding: 0 26px; font-size: 1.05rem; }
 .button-primary { background: var(--sky); color: #fff; }
 .button-primary:hover { background: var(--sky-deep); }
@@ -62,9 +64,9 @@ h2 { font-size: clamp(2.7rem, 6.4vw, 5.2rem); }
 .brand-mark { width: 32px; height: 32px; }
 .brand-dot { display: none; }
 .brand-link { display: inline-flex; flex-shrink: 0; }
-.desktop-nav { display: flex; gap: 32px; margin-inline: auto; }
+.desktop-nav { position: relative; display: flex; gap: 32px; margin-inline: auto; }
 .desktop-nav a { font-size: 0.97rem; font-weight: 500; padding: 6px 0; border-bottom: 2px solid transparent; }
-.desktop-nav a:hover, .desktop-nav a[aria-current] { border-bottom-color: #fff; }
+.desktop-nav a:hover { border-bottom-color: #fff; }
 .menu-toggle, .mobile-nav { display: none; }
 
 /* Hero: open sky, one huge line, the app flying through it */
@@ -83,10 +85,11 @@ h2 { font-size: clamp(2.7rem, 6.4vw, 5.2rem); }
 .stage-phone { position: absolute; right: 96px; top: 0; transform: rotate(7deg); z-index: 2; }
 .float { position: absolute; z-index: 3; display: grid; gap: 10px; }
 .card { background: #fff; color: var(--navy); border-radius: 12px; box-shadow: 0 28px 60px -24px #0c2d4873; }
-.float.card { padding: 14px; width: 300px; }
+.float { width: 300px; }
+.float-surface { padding: 14px; display: grid; gap: 10px; }
 .float-label { display: flex; align-items: center; gap: 8px; font-size: 0.86rem; font-weight: 700; color: var(--sky-deep); }
 .float-signal { left: -40px; top: 330px; transform: rotate(-5deg); }
-.float-win { right: -8px; top: 190px; width: 250px; transform: rotate(4deg); }
+.float-win { right: -8px; top: 190px; width: 300px; transform: rotate(4deg); }
 .float .bubble { max-width: 100%; }
 .stage-note { position: absolute; right: 0; bottom: -26px; font-size: 0.85rem; font-weight: 500; text-align: right; }
 .pulse { position: absolute; right: 16px; top: 16px; width: 10px; height: 10px; border-radius: 50%; background: var(--go); }
@@ -151,7 +154,7 @@ h2 { font-size: clamp(2.7rem, 6.4vw, 5.2rem); }
 
 /* Real screenshots */
 .shot { display: block; overflow: hidden; background: #05070b; cursor: zoom-in; transition: transform 200ms ease; }
-.shot:hover { transform: translateY(-4px); }
+
 .shot-phone { width: min(290px, 74vw); border-radius: 40px; border: 8px solid var(--navy); box-shadow: 0 60px 80px -30px #0c2d48b3, 0 0 0 2px #ffffff59; }
 .shot-crop { width: 100%; aspect-ratio: 1 / 0.92; border-radius: 10px; border: 2px solid var(--navy); }
 .shot-crop img { width: 100%; height: 100%; object-fit: cover; object-position: 0 40%; }
@@ -236,8 +239,8 @@ html:has(dialog[open]) { overflow: hidden; }
   .stage { margin-top: -60px; }
   .stage-phone { right: 60px; }
   .float-signal { left: -20px; }
-  .float.card { width: 270px; }
-  .float-win { width: 230px; }
+  .float { width: 270px; }
+  .float-win { width: 270px; }
 }
 
 @media (max-width: 900px) {
@@ -288,4 +291,147 @@ html:has(dialog[open]) { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* Motion is progressive enhancement: idle/server-rendered markup is the final state. */
+.clouds { overflow: hidden; }
+.cloud-track { position: absolute; inset: 0 auto 0 0; width: 200%; min-width: 1800px; display: flex; }
+.cloud-art { flex: 0 0 50%; width: 50%; height: 100%; overflow: hidden; }
+.sky-clouds { position: absolute; inset: 0 0 auto; height: 420px; overflow: hidden; pointer-events: none; z-index: 1; }
+.sky-cloud { position: absolute; left: -240px; width: 200px; height: 85px; opacity: 0.12; }
+.sky-cloud-0 { top: 15px; }
+.sky-cloud-1 { top: 110px; width: 150px; opacity: 0.09; }
+.sky-cloud-2 { top: 230px; width: 240px; opacity: 0.14; }
+.sky-cloud-3 { top: 310px; width: 130px; opacity: 0.1; }
+.typed-visual { position: relative; }
+.typed-letter { position: relative; white-space: pre-wrap; }
+.typed-letter::after { content: ''; position: absolute; right: 0; top: 0.06em; height: 0.83em; width: 0.025em; background: currentColor; opacity: 0; }
+.hero-parallax { transition: transform 700ms var(--ease-out); }
+/* Layers are separate so entrances, bobbing, original tilt and parallax compose. */
+.phone-rise, .phone-bob, .notification-enter { width: 100%; }
+.chat-message { position: relative; max-width: 92%; }
+.chat-message-human { justify-self: end; }
+.chat-message .bubble { max-width: 100%; }
+.typing { display: none; position: absolute; top: 0; left: 0; gap: 5px; padding: 17px 15px; background: var(--sky-pale); border-radius: 4px 14px 14px 14px; opacity: 0; }
+.typing span { width: 5px; height: 5px; border-radius: 50%; background: var(--slate); }
+.count-price { position: relative; display: inline-block; font-variant-numeric: tabular-nums; }
+.plan-price .price-reserve { opacity: 0; margin: 0; font: inherit; }
+.plan-price .price-value { position: absolute; inset: 0; margin: 0; font: inherit; white-space: nowrap; }
+.nav-indicator { position: absolute; left: 0; bottom: 0; width: 1px; height: 2px; background: currentColor; transform-origin: left center; opacity: 0; transition: transform 240ms var(--ease-out), opacity 160ms ease; pointer-events: none; }
+.site-header { background: none; isolation: isolate; }
+.site-header::before, .site-header::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: var(--sky-deep); }
+.site-header::after { background: none; box-shadow: 0 10px 24px -14px #0c2d4873; opacity: 0; }
+.faq-list details p, .faq-exit { transform-origin: top left; }
+.faq-item { position: relative; }
+.faq-item details { border-bottom-color: transparent; }
+.faq-rule { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--line); pointer-events: none; }
+.faq-exit { color: var(--slate); padding: 0 40px 22px 0; max-width: 62ch; z-index: 2; }
+.button-primary { position: relative; overflow: hidden; isolation: isolate; }
+.button-primary::after { content: ''; position: absolute; inset: -20% auto -20% -50%; width: 30%; background: linear-gradient(90deg, transparent, #ffffff59, transparent); transform: translateX(0) skewX(-20deg); opacity: 0; pointer-events: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .cloud-track { animation: cloud-drift 140s linear infinite; will-change: transform; }
+  .cloud-track-front { animation-duration: 90s; }
+  .sky-cloud { animation: sky-drift 100s linear infinite; }
+  .sky-cloud-0 { animation-delay: -24s; }
+  .sky-cloud-1 { animation-duration: 137s; animation-delay: -91s; }
+  .sky-cloud-2 { animation-duration: 113s; animation-delay: -57s; }
+  .sky-cloud-3 { animation-duration: 151s; animation-delay: -120s; }
+
+  .reveal-heading[data-motion='pending'] { opacity: 0; transform: translateY(16px); }
+  .reveal-heading[data-motion='running'] { animation: fade-up 600ms var(--ease-out) both; }
+  .hero { --type-start: 320ms; }
+  .closing { --type-start: 100ms; }
+  :is(.hero, .closing)[data-motion='pending'] .typed-letter { opacity: 0; }
+  :is(.hero, .closing)[data-motion='running'] .typed-letter { animation: type-letter 90ms linear calc(var(--type-start) + var(--letter-delay)) both; }
+  :is(.hero, .closing)[data-motion='running'] .typed-letter::after { animation: letter-caret 90ms steps(1, end) calc(var(--type-start) + var(--letter-delay)) both; }
+  :is(.hero, .closing)[data-motion='running'] .typed-letter:last-child::after { animation: letter-caret 90ms steps(1, end) calc(var(--type-start) + var(--letter-delay)) both, caret-blink 600ms step-end calc(var(--type-start) + var(--type-duration)) 3, caret-out 200ms ease calc(var(--type-start) + var(--type-duration) + 1800ms) forwards; }
+  .hero[data-motion='pending'] :is(.kicker, .hero-copy, .phone-rise, .notification-enter, .stage-note) { opacity: 0; }
+  .hero[data-motion='running'] .kicker { animation: fade-up 250ms var(--ease-out) both; }
+  .hero[data-motion='running'] .hero-copy { animation: fade-up 650ms var(--ease-out) 1400ms both; }
+  .hero[data-motion='running'] .phone-rise { animation: phone-rise 900ms var(--ease-out) 1650ms both; }
+  .hero[data-motion='running'] .phone-bob { animation: phone-bob 6s ease-in-out 2550ms infinite; }
+  .hero[data-motion='running'] .float-signal .notification-enter { animation: notification-in 650ms var(--ease-out) 2950ms both; }
+  .hero[data-motion='running'] .float-win .notification-enter { animation: notification-pop 500ms var(--ease-out) 4450ms both; }
+  .hero[data-motion='running'] .float-signal .float-surface { animation: card-bob 7.7s ease-in-out 3600ms infinite; }
+  .hero[data-motion='running'] .float-win .float-surface { animation: card-bob 9.1s ease-in-out 4950ms reverse infinite; }
+  .hero[data-motion='running'] .stage-note { animation: fade-up 500ms var(--ease-out) 2550ms both; }
+
+  .chart-sequence[data-motion='pending'] :is(.candle, .chart-marker, .entry-line, .flag-drop, .regime, .steps li) { opacity: 0; }
+  .chart-sequence[data-motion='running'] .candle { transform-box: fill-box; transform-origin: center bottom; animation: candle-in 240ms var(--ease-out) both; }
+  .chart-sequence[data-motion='running'] .candle-sweep rect { animation: sweep-flash 450ms ease 750ms both; }
+  .chart-marker { transform-box: fill-box; transform-origin: center; }
+  .chart-sequence[data-motion='running'] .chart-marker { animation: marker-pop 450ms var(--ease-out) both; }
+  .chart-sequence[data-motion='running'] .chart-marker-1 { animation-delay: 175ms; }
+  .chart-sequence[data-motion='running'] .chart-marker-2 { animation-delay: 750ms; }
+  .chart-sequence[data-motion='running'] .chart-marker-3 { animation-delay: 1100ms; }
+  .chart-sequence[data-motion='running'] .chart-marker-4 { animation-delay: 1400ms; }
+  .entry-line, .regime { transform-box: fill-box; transform-origin: left center; }
+  .chart-sequence[data-motion='running'] .entry-line { animation: draw-x 350ms var(--ease-out) 1200ms both; }
+  .chart-sequence[data-motion='running'] .flag-drop { animation: flag-drop 400ms var(--ease-out) 1650ms both; }
+  .chart-sequence[data-motion='running'] .regime-wait { animation: regime-wait-fill 750ms linear both; }
+  .chart-sequence[data-motion='running'] .regime-go { animation: draw-x 400ms var(--ease-out) 1000ms both; }
+  .chart-sequence[data-motion='running'] .steps li { animation: fade-up 500ms var(--ease-out) var(--step-delay) both; }
+
+  .chat[data-motion='pending'] .message-content { opacity: 0; }
+  .chat[data-motion='running'] .message-content { animation: message-in 300ms var(--ease-out) var(--message-delay) both; }
+  .chat[data-motion='running'] .typing { display: flex; animation: typing-window 600ms step-end var(--typing-delay) both; }
+  .chat[data-motion='running'] .typing span { animation: typing-dot 300ms ease-in-out var(--typing-delay) 2; }
+  .chat[data-motion='running'] .typing span:nth-child(2) { animation-delay: calc(var(--typing-delay) + 100ms); }
+  .chat[data-motion='running'] .typing span:nth-child(3) { animation-delay: calc(var(--typing-delay) + 200ms); }
+
+  .plan[data-motion='pending'] { opacity: 0; transform: translateY(24px); }
+  .plan[data-motion='running'] { animation: plan-rise 650ms var(--ease-out) var(--plan-delay) both; }
+  .plan[data-motion='pending'] .points svg { opacity: 0; }
+  .plan[data-motion='running'] .points svg { transform-box: fill-box; transform-origin: left center; animation: draw-x 240ms var(--ease-out) both; animation-delay: inherit; }
+  .header-inner { transition: transform 240ms var(--ease-out); }
+  .site-header::before { transition: transform 240ms var(--ease-out); }
+  .site-header::after { transition: opacity 240ms ease; }
+  .header-scrolled .header-inner { transform: translateY(-4px); }
+  .header-scrolled::before, .header-scrolled::after { transform: translateY(-8px); }
+  .header-scrolled::after { opacity: 1; }
+  .tile, .shot img { transition: transform 240ms var(--ease-out); }
+  .button:active { transform: translateY(0) scale(0.97); }
+}
+
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  .button:hover { transform: translateY(-2px); }
+  .button-primary:hover::after { animation: light-sweep 550ms var(--ease-out); }
+  .tile:hover { transform: translateY(-4px); }
+  .shot:hover { transform: translateY(-4px); }
+  .shot:hover img { transform: scale(1.02); }
+}
+
+@keyframes cloud-drift { to { transform: translateX(-50%); } }
+@keyframes sky-drift { to { transform: translateX(calc(100vw + 480px)); } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes type-letter { from { opacity: 0; } 1%, to { opacity: 1; } }
+@keyframes letter-caret { 0%, 99% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes caret-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes caret-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes phone-rise { from { opacity: 0; transform: translateY(70px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes phone-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes card-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
+@keyframes notification-in { from { opacity: 0; transform: translateX(-45px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes notification-pop { from { opacity: 0; transform: translateY(14px) scale(0.94); } 70% { opacity: 1; transform: translateY(-2px) scale(1.015); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes candle-in { from { opacity: 0; transform: translateY(5px) scaleY(0.95); } to { opacity: 1; transform: translateY(0) scaleY(1); } }
+@keyframes sweep-flash { 0%, 100% { opacity: 1; } 45% { opacity: 0.25; } }
+@keyframes marker-pop { from { opacity: 0; transform: scale(0.9); } 65% { opacity: 1; transform: scale(1.12); } to { opacity: 1; transform: scale(1); } }
+@keyframes draw-x { from { opacity: 0; transform: scaleX(0.001); } to { opacity: 1; transform: scaleX(1); } }
+@keyframes regime-wait-fill { from { opacity: 0; transform: scaleX(0.001); } to { opacity: 0.55; transform: scaleX(1); } }
+@keyframes flag-drop { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes message-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes typing-window { 0%, 99% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes typing-dot { 0%, 100% { opacity: 0.45; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+@keyframes plan-rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes light-sweep { 0% { opacity: 0; transform: translateX(0) skewX(-20deg); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateX(650%) skewX(-20deg); } }
+
+@media (max-width: 760px) {
+  .faq-exit { padding-right: 0; }
+}
+/* Keep the original global reduced-motion block; all enhancements also opt in above. */
+@media (prefers-reduced-motion: reduce) {
+  .typed-letter::after, .typing { display: none !important; }
+  .hero-parallax { transform: none !important; }
+  .pulse::after { opacity: 0; }
 }

@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react';
+import { MotionGroup, RevealHeading } from './motion';
 import { steps } from '@/config/products';
 
 /* A drawn example of one setup, start to finish. Prices are on a 0-100 scale; nothing here is market data. */
@@ -16,7 +18,7 @@ const candles = closes.map((close, i) => {
 });
 
 function Marker({ n, cx, cy }: { n: number; cx: number; cy: number }) {
-  return <g><circle cx={cx} cy={cy} r="15" className="marker-dot" /><text x={cx} y={cy + 5.5} textAnchor="middle" className="marker-num">{n}</text></g>;
+  return <g className={`chart-marker chart-marker-${n}`}><circle cx={cx} cy={cy} r="15" className="marker-dot" /><text x={cx} y={cy + 5.5} textAnchor="middle" className="marker-num">{n}</text></g>;
 }
 
 export function HowItWorks() {
@@ -24,8 +26,9 @@ export function HowItWorks() {
   return (
     <section id="how" className="how">
       <div className="container">
-        <h2>How a setup gets made</h2>
+        <RevealHeading>How a setup gets made</RevealHeading>
         <p className="section-lede">One example, start to finish. The numbers on the chart match the four steps below it.</p>
+        <MotionGroup className="chart-sequence">
         <figure className="read-figure card">
           <div className="read-scroll" tabIndex={0} role="group" aria-label="Example chart, scrolls sideways on small screens">
             <svg className="read-chart" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="read-title read-desc">
@@ -39,17 +42,17 @@ export function HowItWorks() {
               <text x={W - 14} y={y(30) + 19} textAnchor="end" className="zone-label demand-text">Support zone</text>
 
               {candles.map((c, i) => (
-                <g key={i} className={i === SWEEP ? 'candle candle-sweep' : c.up ? 'candle candle-up' : 'candle candle-down'}>
+                <g key={i} style={{ animationDelay: `${i * 25}ms` }} className={i === SWEEP ? 'candle candle-sweep' : c.up ? 'candle candle-up' : 'candle candle-down'}>
                   <path d={`M${x(i)} ${y(c.high)}V${y(c.low)}`} />
                   <rect x={x(i) - 5.5} y={y(Math.max(c.open, c.close))} width="11" height={Math.max(2, Math.abs(c.close - c.open) * SCALE)} rx="1" />
                 </g>
               ))}
 
               <path d={`M${x(SWEEP + 1)} ${y(36)}H${x(SWEEP + 9)}`} className="entry-line" />
-              <g transform={`translate(${x(SWEEP + 3) + 4} ${y(36) + 22})`}>
+              <g transform={`translate(${x(SWEEP + 3) + 4} ${y(36) + 22})`}><g className="flag-drop">
                 <rect width="112" height="30" rx="6" className="sent-flag" />
                 <text x="56" y="20" textAnchor="middle" className="sent-text">Setup sent</text>
-              </g>
+              </g></g>
 
               <rect x="0" y={H - 22} width={regimeSplit} height="8" rx="4" className="regime regime-wait" />
               <rect x={regimeSplit + 6} y={H - 22} width={W - regimeSplit - 6} height="8" rx="4" className="regime regime-go" />
@@ -66,13 +69,14 @@ export function HowItWorks() {
         </figure>
         <ol className="steps">
           {steps.map((step, i) => (
-            <li key={step.title}>
+            <li key={step.title} style={{ '--step-delay': `${[175, 750, 1100, 1400][i]}ms` } as CSSProperties}>
               <span className="step-num" aria-hidden="true">{i + 1}</span>
               <h3>{step.title}</h3>
               <p>{step.body}</p>
             </li>
           ))}
         </ol>
+        </MotionGroup>
       </div>
     </section>
   );

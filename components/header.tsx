@@ -14,26 +14,53 @@ const navigation = [
 export function Header() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('');
+  const [scrolled, setScrolled] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
+  const indicatorRef = useRef<HTMLSpanElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) setActive(`#${entry.target.id}`);
+    let frame = 0;
+    const update = () => {
+      setScrolled(window.scrollY > 40);
+      let current = '';
+      for (const item of navigation) {
+        const section = document.querySelector(item.href);
+        if (section && section.getBoundingClientRect().top <= window.innerHeight * 0.3) current = item.href;
       }
-    }, { rootMargin: '-15% 0px -65% 0px' });
-    for (const item of navigation) {
-      const section = document.querySelector(item.href);
-      if (section) observer.observe(section);
-    }
-    const top = document.querySelector('#top');
-    const topObserver = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) setActive('');
-    }, { threshold: 0.3 });
-    if (top) topObserver.observe(top);
-    return () => { observer.disconnect(); topObserver.disconnect(); };
+      setActive(current);
+    };
+    const onScroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
   }, []);
+
+  useEffect(() => {
+    const nav = navRef.current;
+    const line = indicatorRef.current;
+    if (!nav || !line) return;
+    const update = () => {
+      const link = nav.querySelector<HTMLElement>('[aria-current]');
+      line.style.opacity = link ? '1' : '0';
+      if (link) line.style.transform = `translateX(${link.offsetLeft}px) scaleX(${link.offsetWidth})`;
+    };
+    update();
+    const resize = new ResizeObserver(update);
+    resize.observe(nav);
+    let alive = true;
+    document.fonts.ready.then(() => { if (alive) update(); });
+    return () => { alive = false; resize.disconnect(); };
+  }, [active]);
 
   useEffect(() => {
     if (!open) return;
@@ -59,12 +86,13 @@ export function Header() {
   }, [open]);
 
   return (
-    <header className="site-header">
+    <header className={`site-header${scrolled ? ' header-scrolled' : ''}`}>
       <div className="header-inner container" ref={menuRef} onBlur={(event) => {
         if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) setOpen(false);
       }}>
         <a href="#top" className="brand-link" aria-label="SwiftChart home"><Brand /></a>
-        <nav className="desktop-nav" aria-label="Main navigation">
+        <nav className="desktop-nav" aria-label="Main navigation" ref={navRef}>
+          <span className="nav-indicator" ref={indicatorRef} aria-hidden="true" />
           {navigation.map(item => <a key={item.href} href={item.href} aria-current={active === item.href ? 'location' : undefined}>{item.label}</a>)}
         </nav>
         <a className="button button-primary header-cta" href={links.app} target="_blank" rel="noopener noreferrer">Open the web app<span className="sr-only"> (opens in a new tab)</span></a>

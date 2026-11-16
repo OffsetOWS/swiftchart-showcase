@@ -5,7 +5,9 @@ import { Header } from './header';
 import { HowItWorks } from './how-it-works';
 import { AccessLink } from './access-link';
 import { ScreenshotPreview } from './screenshot-preview';
-import { Clouds } from './clouds';
+import { Clouds, SkyClouds } from './clouds';
+import { CountPrice, HeroMotion, MotionSection, PlanMotion, RevealHeading, TypedHeading } from './motion';
+import { FaqItem } from './faq-item';
 import { AgentExample, SignalBubble, SignalsExample, TakeProfitBubble } from './previews';
 
 function ProductMedia({ product }: { product: Product }) {
@@ -27,23 +29,23 @@ function Pricing() {
   return (
     <section id="pricing" className="pricing">
       <div className="container">
-        <h2>Signals for $9.99. Everything for $19.99.</h2>
+        <RevealHeading>Signals for $9.99. Everything for $19.99.</RevealHeading>
         <p className="section-lede">Basic sends confirmed setups to your Telegram. Pro adds Agent Swift, the TradingView Indicator and every new feature.</p>
         <div className="plans">
-          {pricing.plans.map(plan => (
-            <article className={`plan plan-${plan.id}`} key={plan.id}>
+          {pricing.plans.map((plan, index) => (
+            <PlanMotion className={`plan plan-${plan.id}`} key={plan.id} index={index}>
               <h3>{plan.name}</h3>
-              <p className="plan-price"><span>{plan.price}</span> {plan.period}</p>
+              <p className="plan-price"><CountPrice price={plan.price} delay={index * 140} /> {plan.period}</p>
               <p className="plan-summary">{plan.summary}</p>
               <ul className="points">
-                {plan.features.map(feature => <li key={feature}><Icon name="check" size={17} /><span>{feature}</span></li>)}
+                {plan.features.map((feature, index) => <li key={feature} style={{ animationDelay: `${300 + index * 90}ms` }}><Icon name="check" size={17} /><span>{feature}</span></li>)}
               </ul>
               {pricing.checkoutAvailable ? (
                 <a className={`button button-${plan.id === 'pro' ? 'primary' : 'outline'} button-large`} href={pricing.checkoutUrl} target="_blank" rel="noopener noreferrer">{plan.cta}<span className="sr-only"> (opens in a new tab)</span></a>
               ) : (
                 <p className="plan-soon"><span className="pending-dot" />Opens soon.</p>
               )}
-            </article>
+            </PlanMotion>
           ))}
         </div>
         <p className="plan-note">{pricing.note}</p>
@@ -58,10 +60,11 @@ export function Site() {
       <a className="skip-link" href="#main">Skip to content</a>
       <Header />
       <main id="main">
-        <section id="top" className="hero">
+        <HeroMotion>
+          <SkyClouds />
           <div className="container hero-inner">
             <p className="kicker">Crypto and forex setups</p>
-            <h1>Trade clear.</h1>
+            <TypedHeading text="Trade clear." />
             <div className="hero-grid">
               <div className="hero-copy">
                 <p className="hero-lede">Most of the market isn’t worth trading. SwiftChart reads the charts for you and messages you on Telegram only when a setup is confirmed.</p>
@@ -69,28 +72,28 @@ export function Site() {
                 <p className="hero-note">No trades are placed for you. Every decision stays yours.</p>
               </div>
               <div className="stage">
-                <div className="float float-signal card">
+                <div className="float float-signal"><div className="notification-enter"><div className="hero-parallax" data-parallax><div className="float-surface card">
                   <span className="pulse" aria-hidden="true" />
                   <p className="float-label"><Icon name="signals" size={16} />SwiftChart Signals</p>
                   <SignalBubble />
-                </div>
-                <div className="stage-phone"><ScreenshotPreview product={products.find(p => p.id === 'web')!} /></div>
-                <div className="float float-win card">
+                </div></div></div></div>
+                <div className="stage-phone"><div className="phone-rise"><div className="phone-bob"><div className="hero-parallax" data-parallax><ScreenshotPreview product={products.find(p => p.id === 'web')!} /></div></div></div></div>
+                <div className="float float-win"><div className="notification-enter"><div className="hero-parallax" data-parallax><div className="float-surface card">
                   <p className="float-label"><Icon name="signals" size={16} />SwiftChart Signals</p>
                   <TakeProfitBubble />
-                </div>
+                </div></div></div></div>
                 <p className="stage-note">The phone is the real app. The messages are examples.</p>
               </div>
             </div>
           </div>
           <Clouds id="clouds-hero" />
-        </section>
+        </HeroMotion>
 
         <HowItWorks />
 
         <section id="products" className="products">
           <div className="container">
-            <h2>Four ways to use it</h2>
+            <RevealHeading>Four ways to use it</RevealHeading>
             <p className="section-lede">The same analysis sits behind all four. Pick the one that fits how you trade, or use them together.</p>
             <div className="bento">
               {products.map(product => (
@@ -115,21 +118,21 @@ export function Site() {
 
         <section id="faq" className="faq">
           <div className="container faq-layout">
-            <h2>Questions people ask first</h2>
+            <RevealHeading>Questions people ask first</RevealHeading>
             <div className="faq-list card">
-              {faqs.map(faq => <details key={faq.question}><summary>{faq.question}<Icon name="plus" size={20} /></summary><p>{faq.answer}</p></details>)}
+              {faqs.map(faq => <FaqItem key={faq.question} question={faq.question} answer={faq.answer} />)}
             </div>
           </div>
         </section>
 
-        <section className="closing">
+        <MotionSection className="closing">
           <div className="container closing-inner">
-            <h2>Let the setup find you.</h2>
+            <TypedHeading as="h2" text="Let the setup find you." />
             <p className="closing-lede">Pick Basic for the signals, or Pro for every tool.</p>
             <StartButtons />
           </div>
           <Clouds id="clouds-closing" />
-        </section>
+        </MotionSection>
       </main>
       <footer className="site-footer">
         <div className="container footer-inner">
