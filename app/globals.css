@@ -190,7 +190,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .pricing { padding: 0 0 112px; }
 .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 48px; align-items: stretch; }
 .plan { padding: 38px; border-radius: 14px; display: flex; flex-direction: column; scroll-margin-top: 96px; }
-.plan-free { background: #fff; border: 2px solid var(--navy); }
+.plan-basic { background: #fff; border: 2px solid var(--navy); }
 .plan-pro { background: var(--sky); color: #fff; box-shadow: 0 30px 60px -30px #1f84c2cc; }
 .plan h3 { font-size: 2rem; }
 .plan-price { margin-top: 14px; font-weight: 600; font-size: 1.05rem; }
@@ -201,7 +201,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .plan .button, .plan-soon { margin-top: auto; align-self: flex-start; }
 .plan-pro .button-primary { background: #fff; color: var(--sky-deep); }
 .plan-pro .button-primary:hover { background: var(--sun); color: var(--navy); }
-.plan-soon { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; border: 2px dashed #fff; border-radius: 5px; padding: 14px 18px; }
+.plan-soon { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; border: 2px dashed currentColor; border-radius: 5px; padding: 14px 18px; }
 .plan-soon .pending-dot { background: var(--sun); }
 .plan-note { margin-top: 20px; color: var(--slate); font-size: 0.95rem; max-width: 70ch; }
 

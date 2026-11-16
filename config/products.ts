@@ -13,6 +13,7 @@ export type Product = {
   shortName: string;
   /** Where it runs, shown as a small tag beside the name. */
   platform: string;
+  plan: 'Basic and Pro' | 'Pro';
   /** One line that says what you get. */
   headline: string;
   description: string;
@@ -33,7 +34,7 @@ export const links = {
 
 /** Pricing. Edit the plans here; the page builds the section from this. */
 export type Plan = {
-  id: 'free' | 'pro';
+  id: 'basic' | 'pro';
   name: string;
   price: string;
   period: string;
@@ -43,40 +44,41 @@ export type Plan = {
 };
 
 export const pricing = {
-  /** Flip to true once people can actually pay for Pro. Until then the Pro card says it opens soon. */
-  proAvailable: false,
-  /** Where the "Go Pro" button sends people once proAvailable is true. */
-  proUrl: links.app,
+  /** Flip to true once people can actually pay. Until then both cards say they open soon. */
+  checkoutAvailable: false,
+  /** Where the plan buttons send people once checkoutAvailable is true. */
+  checkoutUrl: links.app,
   plans: [
     {
-      id: 'free',
-      name: 'Free',
-      price: '$0',
-      period: 'forever',
-      summary: 'Open SwiftChart and look for a setup yourself.',
+      id: 'basic',
+      name: 'Basic',
+      price: '$9.99',
+      period: 'a month',
+      summary: 'Confirmed setups sent to your Telegram.',
       features: [
-        '5 manual scans a day',
-        'Setup history',
-        'The public record of how past alerts played out',
+        'Confirmed setups from the SwiftChart Signals bot',
+        'Take-profit alerts on Telegram',
+        'A 48-hour window on every signal',
+        'Web App access',
       ],
-      cta: 'Start free',
+      cta: 'Get Basic',
     },
     {
       id: 'pro',
       name: 'Pro',
-      price: '$9.99',
+      price: '$19.99',
       period: 'a month',
-      summary: 'Get told the moment a setup matches your watchlist.',
+      summary: 'Every SwiftChart tool, plus new features as they launch.',
       features: [
-        'Real-time Telegram alerts for the coins you pick',
-        'Watchlist filters, so you only hear about what you trade',
-        'A higher daily scan limit',
-        'Everything in Free',
+        'Everything in Basic',
+        'Agent Swift',
+        'The TradingView Indicator',
+        'Access to new features as they launch',
       ],
       cta: 'Go Pro',
     },
   ] as Plan[],
-  note: 'Pro covers crypto alerts. Forex and automated trading are not part of the paid plan. Billed monthly; there is no lifetime plan.',
+  note: 'Both plans are billed monthly. There is no free plan and no lifetime plan.',
 };
 
 export const products: Product[] = [
@@ -85,9 +87,10 @@ export const products: Product[] = [
     name: 'SwiftChart Signals',
     shortName: 'Signals',
     platform: 'Telegram',
+    plan: 'Basic and Pro',
     headline: 'The setup comes to you.',
     description:
-      'A Telegram bot that messages you when a setup is confirmed, then keeps you posted as the trade plays out. No chart-watching in between. Real-time alerts are part of Pro.',
+      'A Telegram bot that messages you when a setup is confirmed, then keeps you posted as the trade plays out. No chart-watching in between. Included in Basic and Pro.',
     points: [
       'Only confirmed setups are sent. Weak, mid-range ones are filtered out before they reach you.',
       'You get an alert the moment a trade hits take-profit.',
@@ -102,6 +105,7 @@ export const products: Product[] = [
     name: 'SwiftChart Web App',
     shortName: 'Web App',
     platform: 'Browser',
+    plan: 'Basic and Pro',
     headline: 'The whole market on one screen.',
     description:
       'Open it on your phone or laptop to see what the market is doing right now, run a scan yourself, and look back through past setups.',
@@ -133,6 +137,7 @@ export const products: Product[] = [
     name: 'Agent Swift',
     shortName: 'Agent Swift',
     platform: 'Telegram',
+    plan: 'Pro',
     headline: 'Ask it about any chart.',
     description:
       'A market analyst you can message. Ask what a coin is doing, why a setup looks the way it does, or what to watch next, and keep asking until it makes sense.',
@@ -150,6 +155,7 @@ export const products: Product[] = [
     name: 'SwiftChart Indicator',
     shortName: 'Indicator',
     platform: 'TradingView',
+    plan: 'Pro',
     headline: 'The same read, on your own chart.',
     description:
       'Add SwiftChart to TradingView and a panel on your chart shows the bias, the zones, and what to do next, on the pair and timeframe you already have open.',
@@ -191,8 +197,8 @@ export const siteConfig = {
 };
 
 export const faqs = [
-  { question: 'What can I do for free?', answer: 'Run up to 5 manual scans a day in the web app, look back through setup history, and see the public record of how past alerts played out. No card needed.' },
-  { question: 'What does Pro cost, and what do I get?', answer: 'Pro is $9.99 a month. It adds real-time Telegram alerts for the coins you choose, watchlist filters, and a higher daily scan limit. There is no lifetime plan.' },
+  { question: 'What does it cost?', answer: 'Basic is $9.99 a month and covers Telegram signals. Pro is $19.99 a month and adds Agent Swift, the TradingView Indicator and access to new features. There is no free plan.' },
+  { question: 'What is the difference between Basic and Pro?', answer: 'Basic gets you the signals on Telegram. Pro gets you every SwiftChart tool: signals, Agent Swift, the TradingView Indicator, and new features as they launch.' },
   { question: 'Which markets does SwiftChart cover?', answer: 'Crypto and forex. The web app switches between the two, and the TradingView indicator works on both.' },
   { question: 'Does it place trades for me?', answer: 'No. SwiftChart finds and explains setups. You decide whether to take them and place the trade yourself, on whichever exchange or broker you use.' },
   { question: 'How is Signals different from Agent Swift?', answer: 'Signals is a feed: it messages you when a setup is confirmed and when a trade hits take-profit. Agent Swift is a conversation: you ask it questions and it answers. They are two separate Telegram bots.' },

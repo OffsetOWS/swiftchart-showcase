@@ -17,8 +17,8 @@ function ProductMedia({ product }: { product: Product }) {
 function StartButtons() {
   return (
     <div className="start-buttons">
-      <a className="button button-primary button-large" href={links.app} target="_blank" rel="noopener noreferrer">Start free<span className="sr-only"> (opens in a new tab)</span></a>
-      <a className="button button-outline button-large" href="#pricing">See pricing</a>
+      <a className="button button-primary button-large" href="#pricing">See plans</a>
+      <a className="button button-outline button-large" href={links.app} target="_blank" rel="noopener noreferrer">Open the web app<span className="sr-only"> (opens in a new tab)</span></a>
     </div>
   );
 }
@@ -27,8 +27,8 @@ function Pricing() {
   return (
     <section id="pricing" className="pricing">
       <div className="container">
-        <h2>Free to look. $9.99 to be told.</h2>
-        <p className="section-lede">Anyone can open SwiftChart and scan for a setup. Pro sends the setup to you, so you do not have to sit at the chart.</p>
+        <h2>Signals for $9.99. Everything for $19.99.</h2>
+        <p className="section-lede">Basic sends confirmed setups to your Telegram. Pro adds Agent Swift, the TradingView Indicator and every new feature.</p>
         <div className="plans">
           {pricing.plans.map(plan => (
             <article className={`plan plan-${plan.id}`} key={plan.id}>
@@ -38,12 +38,10 @@ function Pricing() {
               <ul className="points">
                 {plan.features.map(feature => <li key={feature}><Icon name="check" size={17} /><span>{feature}</span></li>)}
               </ul>
-              {plan.id === 'free' ? (
-                <a className="button button-outline button-large" href={links.app} target="_blank" rel="noopener noreferrer">{plan.cta}<span className="sr-only"> (opens in a new tab)</span></a>
-              ) : pricing.proAvailable ? (
-                <a className="button button-primary button-large" href={pricing.proUrl} target="_blank" rel="noopener noreferrer">{plan.cta}<span className="sr-only"> (opens in a new tab)</span></a>
+              {pricing.checkoutAvailable ? (
+                <a className={`button button-${plan.id === 'pro' ? 'primary' : 'outline'} button-large`} href={pricing.checkoutUrl} target="_blank" rel="noopener noreferrer">{plan.cta}<span className="sr-only"> (opens in a new tab)</span></a>
               ) : (
-                <p className="plan-soon"><span className="pending-dot" />Pro opens soon. Start free today.</p>
+                <p className="plan-soon"><span className="pending-dot" />Opens soon.</p>
               )}
             </article>
           ))}
@@ -98,7 +96,7 @@ export function Site() {
               {products.map(product => (
                 <article id={`product-${product.id}`} className={`tile tile-${product.id} card`} key={product.id}>
                   <div className="tile-copy">
-                    <p className="product-name"><span className="product-icon"><Icon name={product.id} size={20} /></span>{product.name}<span className="platform">{product.platform}</span></p>
+                    <p className="product-name"><span className="product-icon"><Icon name={product.id} size={20} /></span>{product.name}<span className="platform">{product.platform}</span><span className="platform">{product.plan}</span></p>
                     <h3>{product.headline}</h3>
                     <p className="product-description">{product.description}</p>
                     <ul className="points">
@@ -127,7 +125,7 @@ export function Site() {
         <section className="closing">
           <div className="container closing-inner">
             <h2>Let the setup find you.</h2>
-            <p className="closing-lede">Start free in the web app. Go Pro when you want the setups sent to you.</p>
+            <p className="closing-lede">Pick Basic for the signals, or Pro for every tool.</p>
             <StartButtons />
           </div>
           <Clouds id="clouds-closing" />
