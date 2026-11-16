@@ -78,7 +78,7 @@ export const pricing = {
       cta: 'Go Pro',
     },
   ] as Plan[],
-  note: 'Both plans are billed monthly. There is no free plan and no lifetime plan.',
+  note: 'Both plans are billed monthly.',
 };
 
 export const products: Product[] = [
